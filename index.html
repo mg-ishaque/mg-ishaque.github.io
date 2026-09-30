@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="MG Ishaque — Cloud, Data and AI portfolio.">
+  <meta name="description" content="MG Ishaque — Cloud, Data and AI engineering portfolio.">
   <meta name="theme-color" content="#070b16">
   <title>MG Ishaque | Cloud • Data • AI</title>
 
@@ -17,6 +17,7 @@
       --line: rgba(255,255,255,.09);
       --accent: #7c9cff;
       --accent-2: #56e0c1;
+      --warning: #f2c86b;
       --max: 1120px;
       --radius: 22px;
     }
@@ -34,6 +35,7 @@
         var(--bg);
       color: var(--text);
       line-height: 1.65;
+      overflow-x: hidden;
     }
 
     a { color: inherit; text-decoration: none; }
@@ -70,17 +72,33 @@
 
     .nav-links {
       display: flex;
-      gap: 24px;
+      gap: 22px;
       align-items: center;
     }
 
     .nav-links a {
+      position: relative;
       font-size: .92rem;
       color: var(--muted);
       transition: .2s;
     }
 
-    .nav-links a:hover { color: var(--text); }
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--text); }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 100%;
+      bottom: -8px;
+      height: 2px;
+      border-radius: 99px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transition: right .3s ease;
+    }
+
+    .nav-links a.active::after { right: 0; }
 
     .menu {
       display: none;
@@ -97,6 +115,8 @@
       display: grid;
       place-items: center;
       padding: 90px 0;
+      position: relative;
+      overflow: hidden;
     }
 
     .hero-grid {
@@ -117,6 +137,7 @@
       color: var(--muted);
       font-size: .82rem;
       margin-bottom: 24px;
+      box-shadow: 0 0 35px rgba(124,156,255,.08);
     }
 
     .dot {
@@ -132,26 +153,34 @@
       line-height: .94;
       letter-spacing: -.075em;
       max-width: 850px;
+      text-shadow: 0 0 70px rgba(124,156,255,.08);
     }
 
     .gradient {
-      background: linear-gradient(
-        100deg,
-        #fff 10%,
-        #9bb1ff 48%,
-        #69e4c6 90%
-      );
+      background: linear-gradient(100deg, #fff 10%, #9bb1ff 48%, #69e4c6 90%);
+      background-size: 200% 200%;
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
+      animation: gradientMove 5s ease infinite;
+    }
+
+    .hero-role {
+      margin-top: 18px;
+      font-size: 1.05rem;
+      color: var(--text);
+      font-weight: 700;
+      letter-spacing: .01em;
     }
 
     .hero p {
       font-size: 1.15rem;
       color: var(--muted);
-      max-width: 650px;
-      margin: 28px 0 34px;
+      max-width: 680px;
+      margin: 20px 0 34px;
     }
+
+    .hero p strong { color: var(--text); }
 
     .actions {
       display: flex;
@@ -171,31 +200,30 @@
       transition: .2s;
     }
 
+    .btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,.2);
+    }
+
     .btn.primary {
       background: var(--text);
       color: #0a0e19;
+      box-shadow: 0 12px 35px rgba(124,156,255,.12);
     }
 
     .btn.secondary {
       background: rgba(255,255,255,.04);
     }
 
-    .btn:hover {
-      transform: translateY(-2px);
-      border-color: rgba(255,255,255,.2);
-    }
-
     /* TERMINAL */
     .terminal {
-      background: linear-gradient(
-        145deg,
-        rgba(17,26,48,.95),
-        rgba(8,13,27,.95)
-      );
+      background: linear-gradient(145deg, rgba(17,26,48,.95), rgba(8,13,27,.95));
       border: 1px solid var(--line);
       border-radius: var(--radius);
       box-shadow: 0 30px 90px rgba(0,0,0,.35);
       overflow: hidden;
+      position: relative;
+      transform-style: preserve-3d;
     }
 
     .terminal-bar {
@@ -239,7 +267,7 @@
     }
 
     .section-head p {
-      max-width: 520px;
+      max-width: 560px;
       color: var(--muted);
     }
 
@@ -250,11 +278,9 @@
     }
 
     .card {
-      background: linear-gradient(
-        145deg,
-        rgba(17,26,48,.8),
-        rgba(10,15,29,.8)
-      );
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(145deg, rgba(17,26,48,.8), rgba(10,15,29,.8));
       border: 1px solid var(--line);
       border-radius: var(--radius);
       padding: 26px;
@@ -269,6 +295,12 @@
     .card .icon {
       font-size: 1.5rem;
       margin-bottom: 18px;
+      transition: transform .3s ease, filter .3s ease;
+    }
+
+    .card:hover .icon {
+      transform: translateZ(20px) scale(1.12) rotate(-4deg);
+      filter: drop-shadow(0 0 12px rgba(124,156,255,.35));
     }
 
     .card h3 {
@@ -294,13 +326,144 @@
       border: 1px solid var(--line);
       border-radius: 999px;
       color: #b9c4da;
+      transition: .2s ease;
     }
+
+    .tag:hover {
+      border-color: rgba(124,156,255,.5);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .tag.learning {
+      border-color: rgba(242,200,107,.25);
+      color: #ead79f;
+    }
+
+    .tag.planned {
+      border-color: rgba(86,224,193,.25);
+      color: #9fe5d0;
+    }
+
+    /* ABOUT */
+    .about {
+      display: grid;
+      grid-template-columns: .85fr 1.15fr;
+      gap: 55px;
+    }
+
+    .about-copy p {
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .about-copy strong { color: var(--text); }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .stat {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255,255,255,.025);
+      transition: transform .25s ease, border-color .25s ease, background .25s ease;
+    }
+
+    .stat:hover {
+      transform: translateY(-4px);
+      border-color: rgba(124,156,255,.25);
+      background: rgba(124,156,255,.045);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.35rem;
+      letter-spacing: -.04em;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: .82rem;
+    }
+
+    /* CAREER JOURNEY */
+    .journey {
+      position: relative;
+      display: grid;
+      gap: 16px;
+    }
+
+    .journey::before {
+      content: "";
+      position: absolute;
+      left: 18px;
+      top: 18px;
+      bottom: 18px;
+      width: 1px;
+      background: linear-gradient(var(--accent), rgba(86,224,193,.15));
+    }
+
+    .journey-item {
+      position: relative;
+      display: grid;
+      grid-template-columns: 38px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .journey-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin: 8px 0 0 13px;
+      background: var(--accent-2);
+      box-shadow: 0 0 15px rgba(86,224,193,.42);
+      z-index: 1;
+    }
+
+    .journey-card {
+      padding: 20px 22px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255,255,255,.025);
+    }
+
+    .journey-card h3 {
+      font-size: 1rem;
+      margin-bottom: 5px;
+    }
+
+    .journey-card p {
+      color: var(--muted);
+      font-size: .91rem;
+    }
+
+    .status {
+      display: inline-flex;
+      padding: 4px 9px;
+      border-radius: 999px;
+      font-size: .7rem;
+      font-weight: 800;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      margin-bottom: 9px;
+      border: 1px solid var(--line);
+    }
+
+    .status.current { color: #b9f7e9; border-color: rgba(86,224,193,.25); }
+    .status.learning { color: #f2dfa5; border-color: rgba(242,200,107,.25); }
+    .status.planned { color: #b7c6ff; border-color: rgba(124,156,255,.25); }
 
     /* PROJECTS */
     .project {
       display: flex;
       flex-direction: column;
-      min-height: 250px;
+      min-height: 270px;
     }
 
     .project .spacer { flex: 1; }
@@ -312,53 +475,15 @@
       font-size: .9rem;
     }
 
-    /* ABOUT */
-    .about {
-      display: grid;
-      grid-template-columns: .8fr 1.2fr;
-      gap: 55px;
-    }
-
-    .about-copy p {
-      color: var(--muted);
-      margin-bottom: 16px;
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(2,1fr);
-      gap: 14px;
-    }
-
-    .stat {
-      padding: 22px;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      background: rgba(255,255,255,.025);
-    }
-
-    .stat strong {
-      display: block;
-      font-size: 1.6rem;
-      letter-spacing: -.04em;
-    }
-
-    .stat span {
-      color: var(--muted);
-      font-size: .82rem;
-    }
-
     /* CONTACT */
     .contact {
+      position: relative;
+      overflow: hidden;
       text-align: center;
       padding: 70px 30px;
       border: 1px solid var(--line);
       border-radius: 28px;
-      background: linear-gradient(
-        145deg,
-        rgba(124,156,255,.1),
-        rgba(86,224,193,.05)
-      );
+      background: linear-gradient(145deg, rgba(124,156,255,.1), rgba(86,224,193,.05));
     }
 
     .contact h2 {
@@ -404,114 +529,15 @@
       filter: blur(0);
     }
 
-    /*
-      Section itself gently brightens while scrolling into view.
-    */
     main section {
       position: relative;
-      transition: filter .8s ease, opacity .8s ease;
+      transition: filter .8s ease;
     }
 
-    main section:not(.section-active) {
-      filter: saturate(.82);
-    }
+    main section:not(.section-active) { filter: saturate(.82); }
+    main section.section-active { filter: saturate(1); }
 
-    main section.section-active {
-      filter: saturate(1);
-    }
-
-    /*
-      Active navigation item.
-    */
-    .nav-links a {
-      position: relative;
-    }
-
-    .nav-links a::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      right: 100%;
-      bottom: -8px;
-      height: 2px;
-      border-radius: 99px;
-      background: linear-gradient(90deg, var(--accent), var(--accent-2));
-      transition: right .3s ease;
-    }
-
-    .nav-links a.active {
-      color: var(--text);
-    }
-
-    .nav-links a.active::after {
-      right: 0;
-    }
-
-    /* RESPONSIVE */
-    @media (max-width: 850px) {
-      .hero-grid,
-      .about {
-        grid-template-columns: 1fr;
-      }
-
-      .terminal { display: none; }
-
-      .grid {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .nav-links { display: none; }
-
-      .menu {
-        display: block;
-      }
-
-      .nav.open .nav-links {
-        display: flex;
-        position: absolute;
-        top: 72px;
-        left: 0;
-        right: 0;
-        background: rgba(7,11,22,.97);
-        padding: 20px 4%;
-        flex-direction: column;
-        align-items: flex-start;
-        border-bottom: 1px solid var(--line);
-      }
-    }
-
-    @media (max-width: 600px) {
-      section { padding: 72px 0; }
-
-      .grid,
-      .stats {
-        grid-template-columns: 1fr;
-      }
-
-      .hero {
-        padding: 70px 0;
-      }
-
-      .hero p {
-        font-size: 1rem;
-      }
-
-      .footer-inner {
-        flex-direction: column;
-      }
-
-      .section-head {
-        display: block;
-      }
-
-      .section-head p {
-        margin-top: 12px;
-      }
-    }
-  
-    /* ===== VISUAL EFFECTS ===== */
-    body { overflow-x: hidden; }
-
+    /* VISUAL EFFECTS */
     .noise {
       position: fixed;
       inset: 0;
@@ -590,11 +616,6 @@
       100% { transform: translate3d(-25px,30px,0) scale(.94); }
     }
 
-    .hero {
-      position: relative;
-      overflow: hidden;
-    }
-
     .hero::before {
       content: "";
       position: absolute;
@@ -616,156 +637,42 @@
       50% { transform: scale(1.04) rotate(8deg); opacity: 1; }
     }
 
-    .eyebrow {
-      box-shadow: 0 0 35px rgba(124,156,255,.08);
-      animation: badgePulse 3s ease-in-out infinite;
-    }
-
-    @keyframes badgePulse {
-      0%,100% { box-shadow: 0 0 25px rgba(124,156,255,.06); }
-      50% { box-shadow: 0 0 35px rgba(86,224,193,.13); }
-    }
-
-    h1 {
-      text-shadow: 0 0 70px rgba(124,156,255,.08);
-    }
-
-    .gradient {
-      background-size: 200% 200%;
-      animation: gradientMove 5s ease infinite;
-    }
-
     @keyframes gradientMove {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
 
-    .terminal {
-      position: relative;
-      transform-style: preserve-3d;
-      transition: transform .15s ease-out, box-shadow .3s ease;
+    @media (max-width: 850px) {
+      .hero-grid, .about { grid-template-columns: 1fr; }
+      .terminal { display: none; }
+      .grid { grid-template-columns: 1fr 1fr; }
+      .nav-links { display: none; }
+      .menu { display: block; }
+
+      .nav.open .nav-links {
+        display: flex;
+        position: absolute;
+        top: 72px;
+        left: 0;
+        right: 0;
+        background: rgba(7,11,22,.97);
+        padding: 20px 4%;
+        flex-direction: column;
+        align-items: flex-start;
+        border-bottom: 1px solid var(--line);
+      }
     }
 
-    .terminal::before {
-      content: "";
-      position: absolute;
-      inset: -1px;
-      border-radius: inherit;
-      padding: 1px;
-      background: linear-gradient(120deg, transparent 20%, rgba(124,156,255,.55), rgba(86,224,193,.45), transparent 80%);
-      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      opacity: .45;
-      animation: borderFlow 5s linear infinite;
-      pointer-events: none;
+    @media (max-width: 600px) {
+      section { padding: 72px 0; }
+      .grid, .stats { grid-template-columns: 1fr; }
+      .hero { padding: 70px 0; }
+      .hero p { font-size: 1rem; }
+      .footer-inner { flex-direction: column; }
+      .section-head { display: block; }
+      .section-head p { margin-top: 12px; }
     }
-
-    @keyframes borderFlow {
-      0% { filter: hue-rotate(0deg); }
-      100% { filter: hue-rotate(360deg); }
-    }
-
-    .card {
-      position: relative;
-      overflow: hidden;
-      transform-style: preserve-3d;
-      will-change: transform;
-    }
-
-    .card::before {
-      content: "";
-      position: absolute;
-      width: 180px;
-      height: 180px;
-      top: var(--spot-y, -100px);
-      left: var(--spot-x, -100px);
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(124,156,255,.16), transparent 68%);
-      pointer-events: none;
-      transition: opacity .2s;
-      opacity: 0;
-    }
-
-    .card:hover::before { opacity: 1; }
-
-    .card::after {
-      content: "";
-      position: absolute;
-      left: -120%;
-      top: 0;
-      width: 70%;
-      height: 100%;
-      transform: skewX(-20deg);
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,.055), transparent);
-      transition: left .65s ease;
-      pointer-events: none;
-    }
-
-    .card:hover::after { left: 150%; }
-
-    .icon {
-      transition: transform .3s ease, filter .3s ease;
-    }
-
-    .card:hover .icon {
-      transform: translateZ(20px) scale(1.12) rotate(-4deg);
-      filter: drop-shadow(0 0 12px rgba(124,156,255,.35));
-    }
-
-    .tag {
-      transition: .2s ease;
-    }
-
-    .tag:hover {
-      border-color: rgba(124,156,255,.5);
-      color: white;
-      transform: translateY(-2px);
-    }
-
-    .btn.primary {
-      box-shadow: 0 12px 35px rgba(124,156,255,.12);
-    }
-
-    .btn.primary:hover {
-      box-shadow: 0 16px 45px rgba(124,156,255,.22);
-    }
-
-    .stat {
-      transition: transform .25s ease, border-color .25s ease, background .25s ease;
-    }
-
-    .stat:hover {
-      transform: translateY(-4px);
-      border-color: rgba(124,156,255,.25);
-      background: rgba(124,156,255,.045);
-    }
-
-    .contact {
-      position: relative;
-      overflow: hidden;
-    }
-
-    .contact::before,
-    .contact::after {
-      content: "";
-      position: absolute;
-      width: 260px;
-      height: 260px;
-      border-radius: 50%;
-      border: 1px solid rgba(124,156,255,.15);
-      animation: contactRing 8s linear infinite;
-    }
-
-    .contact::before { left: -130px; top: -150px; }
-    .contact::after { right: -130px; bottom: -150px; animation-direction: reverse; }
-
-    @keyframes contactRing {
-      to { transform: rotate(360deg) scale(1.15); }
-    }
-
-    .contact > * { position: relative; z-index: 1; }
 
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
@@ -775,12 +682,10 @@
         transition-duration: .01ms !important;
       }
     }
-
   </style>
 </head>
 
 <body>
-
   <div class="cursor-glow" aria-hidden="true"></div>
   <div class="noise" aria-hidden="true"></div>
   <canvas id="particles" aria-hidden="true"></canvas>
@@ -789,21 +694,15 @@
   <div class="floating-orb orb-2" aria-hidden="true"></div>
   <div class="floating-orb orb-3" aria-hidden="true"></div>
 
-
   <nav class="nav" id="nav">
     <div class="container nav-inner">
       <a class="logo" href="#top">MG<span>.</span></a>
 
-      <button
-        class="menu"
-        aria-label="Open menu"
-        aria-expanded="false"
-        onclick="toggleMenu()">
-        ☰
-      </button>
+      <button class="menu" aria-label="Open menu" aria-expanded="false" onclick="toggleMenu()">☰</button>
 
       <div class="nav-links">
         <a href="#about">About</a>
+        <a href="#journey">Journey</a>
         <a href="#skills">Skills</a>
         <a href="#projects">Projects</a>
         <a href="#contact">Contact</a>
@@ -812,145 +711,198 @@
   </nav>
 
   <main id="top">
-
     <!-- HERO -->
     <section class="hero">
       <div class="container hero-grid">
-
         <div class="reveal">
           <div class="eyebrow">
             <span class="dot"></span>
-            Building in Cloud, Data & AI
+            Building toward Cloud & AI Engineering
           </div>
 
-          <h1>
-            MG <span class="gradient">Ishaque.</span>
-          </h1>
+          <h1>MG <span class="gradient">Ishaque.</span></h1>
+
+          <div class="hero-role">Cloud & AI Engineer | AWS | Python | Data & AI</div>
 
           <p>
-            I build practical cloud infrastructure, data workflows and
-            machine-learning projects — with a focus on learning by building.
+            I am building beyond my Data Science foundation toward
+            <strong>AWS Cloud, DevOps, AI/ML, LLMs, RAG, Agentic AI and workflow automation</strong> —
+            with a focus on practical, deployable skills.
           </p>
 
           <div class="actions">
-            <a class="btn primary" href="#projects">
-              View projects ↓
-            </a>
-
-            <a
-              class="btn secondary"
-              href="https://github.com/mg-ishaque"
-              target="_blank"
-              rel="noopener">
+            <a class="btn primary" href="#journey">My career path ↓</a>
+            <a class="btn secondary" href="https://github.com/mg-ishaque" target="_blank" rel="noopener">
               GitHub ↗
             </a>
           </div>
         </div>
 
         <div class="terminal reveal">
-          <div class="terminal-bar">
-            <i></i><i></i><i></i>
-          </div>
-
+          <div class="terminal-bar"><i></i><i></i><i></i></div>
           <div class="terminal-body">
             <span class="muted">$</span> whoami<br>
-            <span class="key">name</span>:
-            <span class="str">"MG Ishaque"</span><br>
+            <span class="key">name</span>: <span class="str">"MG Ishaque"</span><br><br>
 
-            <span class="key">focus</span>:
-            [<span class="str">"Cloud"</span>,
-            <span class="str">"Data"</span>,
-            <span class="str">"AI"</span>]<br>
+            <span class="key">current_role</span>:<br>
+            <span class="str">"Computer Operator — GREF"</span><br><br>
 
-            <span class="key">stack</span>:
-            [<span class="str">"AWS"</span>,
-            <span class="str">"Python"</span>,
-            <span class="str">"SQL"</span>]<br>
+            <span class="key">foundation</span>:<br>
+            [<span class="str">"Data Science"</span>, <span class="str">"Python"</span>, <span class="str">"ML"</span>]<br>
 
-            <span class="key">status</span>:
-            <span class="str">"building"</span><br><br>
+            <span class="key">building</span>:<br>
+            [<span class="str">"AWS"</span>, <span class="str">"SQL"</span>, <span class="str">"DevOps"</span>]<br>
 
-            <span class="muted">
-              # always learning, always shipping
-            </span>
+            <span class="key">next</span>:<br>
+            [<span class="str">"Cloud AI"</span>, <span class="str">"LLMOps"</span>, <span class="str">"Agentic AI"</span>]<br><br>
+
+            <span class="muted"># learn → build → deploy → document</span>
           </div>
         </div>
-
       </div>
     </section>
 
     <!-- ABOUT -->
     <section id="about">
       <div class="container about">
-
         <div class="section-head reveal">
           <h2>About</h2>
         </div>
 
         <div class="about-copy reveal">
           <p>
-            I'm developing across cloud engineering, data engineering and AI.
-            My current work includes AWS hands-on labs, Linux/Git workflows,
-            Python data science and machine-learning projects.
+            I started with <strong>Data Science through IBM</strong> and built a foundation in
+            Python, machine learning, data analysis and predictive modeling. My next goal is to
+            strengthen the engineering side of that foundation.
           </p>
 
           <p>
-            This portfolio is a living record of what I build, learn and
-            document — not just a list of technologies.
+            I am currently working as a <strong>Computer Operator in GREF</strong> while building
+            skills in AWS Cloud, SQL and DevOps. Alongside this, I am learning Deep Learning,
+            LLMs, RAG, Agentic AI, workflow automation and LLMOps.
+          </p>
+
+          <p>
+            This portfolio records the transition from learning concepts to building practical
+            cloud, data and AI systems.
           </p>
 
           <div class="stats">
+            <div class="stat">
+              <strong>Current</strong>
+              <span>Computer Operator • GREF</span>
+            </div>
 
             <div class="stat">
               <strong>Cloud</strong>
-              <span>AWS • EC2 • EBS • ELB • IAM • CloudWatch</span>
+              <span>AWS • EC2 • EBS • IAM • ELB • CloudWatch</span>
             </div>
 
             <div class="stat">
               <strong>Data</strong>
-              <span>Python • SQL • Pandas • NumPy</span>
+              <span>Python • SQL • Pandas • NumPy • ML</span>
             </div>
 
             <div class="stat">
-              <strong>AI/ML</strong>
-              <span>Scikit-learn • Deep Learning • LLMs</span>
+              <strong>AI</strong>
+              <span>Deep Learning • LLMs • RAG • Agents</span>
             </div>
-
-            <div class="stat">
-              <strong>Workflow</strong>
-              <span>Linux • Git • GitHub • Automation</span>
-            </div>
-
           </div>
         </div>
+      </div>
+    </section>
 
+    <!-- CAREER JOURNEY -->
+    <section id="journey">
+      <div class="container">
+        <div class="section-head reveal">
+          <h2>Career Journey</h2>
+          <p>
+            A deliberate move from data science foundations toward cloud-based AI engineering,
+            with each stage adding practical engineering capability.
+          </p>
+        </div>
+
+        <div class="journey">
+          <article class="journey-item reveal">
+            <div class="journey-dot"></div>
+            <div class="journey-card">
+              <div class="status current">Foundation</div>
+              <h3>IBM Data Science</h3>
+              <p>
+                Built foundations in Python, machine learning, data analysis, EDA,
+                feature engineering and predictive modeling.
+              </p>
+            </div>
+          </article>
+
+          <article class="journey-item reveal">
+            <div class="journey-dot"></div>
+            <div class="journey-card">
+              <div class="status current">Current role</div>
+              <h3>Computer Operator — GREF</h3>
+              <p>
+                Current professional role while building a new technical path through
+                cloud, DevOps and AI-focused learning.
+              </p>
+            </div>
+          </article>
+
+          <article class="journey-item reveal">
+            <div class="journey-dot"></div>
+            <div class="journey-card">
+              <div class="status learning">Learning</div>
+              <h3>AWS Cloud + DevOps</h3>
+              <p>
+                Enrolled in a Cloud and DevOps Engineer program and developing practical
+                AWS infrastructure, Linux, Git and DevOps capability.
+              </p>
+            </div>
+          </article>
+
+          <article class="journey-item reveal">
+            <div class="journey-dot"></div>
+            <div class="journey-card">
+              <div class="status learning">Learning</div>
+              <h3>AI Engineering</h3>
+              <p>
+                Deep Learning, LLMs, RAG, SQL, Agentic AI and workflow automation,
+                with a focus on turning AI knowledge into usable systems.
+              </p>
+            </div>
+          </article>
+
+          <article class="journey-item reveal">
+            <div class="journey-dot"></div>
+            <div class="journey-card">
+              <div class="status planned">Planned focus</div>
+              <h3>AWS Cloud AI + LLMOps</h3>
+              <p>
+                Planned specialization in deploying and operating AI/LLM workloads
+                in cloud environments, supported by MLOps/LLMOps practices.
+              </p>
+            </div>
+          </article>
+        </div>
       </div>
     </section>
 
     <!-- SKILLS -->
     <section id="skills">
       <div class="container">
-
         <div class="section-head reveal">
           <h2>Skills</h2>
-
           <p>
-            A growing technical stack focused on building deployable,
-            measurable projects.
+            The stack is intentionally divided between established foundations and skills
+            currently being developed.
           </p>
         </div>
 
         <div class="grid">
-
           <article class="card reveal">
             <div class="icon">☁️</div>
-            <h3>Cloud & Infrastructure</h3>
-
-            <p>
-              Hands-on AWS practice with compute, storage, networking,
-              IAM, monitoring and load balancing.
-            </p>
-
+            <h3>AWS & Cloud</h3>
+            <p>Hands-on AWS learning across compute, storage, identity, monitoring, networking and load balancing.</p>
             <div class="tags">
               <span class="tag">AWS</span>
               <span class="tag">EC2</span>
@@ -958,45 +910,40 @@
               <span class="tag">ELB</span>
               <span class="tag">IAM</span>
               <span class="tag">CloudWatch</span>
+              <span class="tag">Route 53</span>
+              <span class="tag">FSx</span>
             </div>
           </article>
 
           <article class="card reveal">
             <div class="icon">⌘</div>
-            <h3>Data & Python</h3>
-
-            <p>
-              Data analysis, preprocessing, SQL and reproducible Python
-              workflows for analytics and ML.
-            </p>
-
+            <h3>Data & Programming</h3>
+            <p>Python and data-science foundations with SQL and engineering workflows under active development.</p>
             <div class="tags">
               <span class="tag">Python</span>
-              <span class="tag">SQL</span>
+              <span class="tag learning">SQL • Learning</span>
               <span class="tag">Pandas</span>
               <span class="tag">NumPy</span>
+              <span class="tag">Scikit-learn</span>
               <span class="tag">Git</span>
+              <span class="tag">GitHub</span>
             </div>
           </article>
 
           <article class="card reveal">
             <div class="icon">✦</div>
-            <h3>AI & Machine Learning</h3>
-
-            <p>
-              Classical ML and a growing focus on deep learning, LLMs,
-              RAG and MLOps.
-            </p>
-
+            <h3>AI Engineering</h3>
+            <p>Moving from classical ML into modern AI application development and AI operations.</p>
             <div class="tags">
-              <span class="tag">Scikit-learn</span>
-              <span class="tag">TensorFlow</span>
-              <span class="tag">PyTorch</span>
-              <span class="tag">LLM</span>
-              <span class="tag">RAG</span>
+              <span class="tag">Machine Learning</span>
+              <span class="tag learning">Deep Learning • Learning</span>
+              <span class="tag learning">LLMs • Learning</span>
+              <span class="tag learning">RAG • Learning</span>
+              <span class="tag learning">Agentic AI • Learning</span>
+              <span class="tag learning">Automation • Learning</span>
+              <span class="tag learning">LLMOps • Learning</span>
             </div>
           </article>
-
         </div>
       </div>
     </section>
@@ -1004,99 +951,92 @@
     <!-- PROJECTS -->
     <section id="projects">
       <div class="container">
-
         <div class="section-head reveal">
           <h2>Projects</h2>
-
           <p>
-            Selected work and hands-on labs. More projects will be added
-            as they are completed.
+            Selected work, cloud labs and machine-learning projects. New AI and automation
+            projects will be added as they are completed.
           </p>
         </div>
 
         <div class="grid">
-
           <article class="card project reveal">
             <div class="icon">⚙️</div>
-
             <h3>AWS Cloud Labs</h3>
-
             <p>
-              Documented AWS assignments covering IAM, CloudWatch, EBS,
-              FSx and Elastic Load Balancing.
+              Hands-on AWS assignments covering IAM, CloudWatch, EBS, FSx,
+              Elastic Load Balancing, Auto Scaling and Route 53.
             </p>
-
             <div class="tags">
               <span class="tag">AWS</span>
               <span class="tag">Cloud</span>
-              <span class="tag">DevOps</span>
+              <span class="tag learning">DevOps • Learning</span>
             </div>
-
             <div class="spacer"></div>
-
-            <a
-              class="project-link"
-              href="https://github.com/mg-ishaque"
-              target="_blank"
-              rel="noopener">
+            <a class="project-link" href="https://github.com/mg-ishaque" target="_blank" rel="noopener">
               View on GitHub ↗
             </a>
           </article>
 
           <article class="card project reveal">
             <div class="icon">🚀</div>
-
-            <h3>ML Projects</h3>
-
+            <h3>SpaceX Launch Success Prediction</h3>
             <p>
-              Machine-learning projects exploring prediction, evaluation
-              and practical model-building workflows.
+              Machine-learning project using historical Falcon 9 launch data,
+              EDA, feature engineering and classification models.
             </p>
-
             <div class="tags">
               <span class="tag">Python</span>
+              <span class="tag">Pandas</span>
               <span class="tag">Scikit-learn</span>
               <span class="tag">ML</span>
             </div>
-
             <div class="spacer"></div>
+            <a class="project-link"
+               href="https://github.com/mgib954/SpaceX-Launch-Success-Prediction"
+               target="_blank" rel="noopener">
+              View project ↗
+            </a>
+          </article>
 
-            <a
-              class="project-link"
-              href="https://github.com/mg-ishaque"
-              target="_blank"
-              rel="noopener">
+          <article class="card project reveal">
+            <div class="icon">🏠</div>
+            <h3>Housing Prices Prediction</h3>
+            <p>
+              Kaggle regression project using feature engineering, missing-data handling,
+              Ridge, Lasso and XGBoost with cross-validation and RMSE evaluation.
+            </p>
+            <div class="tags">
+              <span class="tag">Python</span>
+              <span class="tag">XGBoost</span>
+              <span class="tag">Ridge</span>
+              <span class="tag">Lasso</span>
+            </div>
+            <div class="spacer"></div>
+            <a class="project-link" href="https://github.com/mg-ishaque" target="_blank" rel="noopener">
               Explore repositories ↗
             </a>
           </article>
 
           <article class="card project reveal">
             <div class="icon">🧠</div>
-
-            <h3>AI Engineering</h3>
-
+            <h3>AI Engineering — In Progress</h3>
             <p>
-              Learning and experimentation around LLM applications,
-              RAG, MLOps and agentic workflows.
+              Learning and experimenting with Deep Learning, LLM applications, RAG,
+              Agentic AI, workflow automation and LLMOps.
             </p>
-
             <div class="tags">
-              <span class="tag">LLMs</span>
-              <span class="tag">RAG</span>
-              <span class="tag">MLOps</span>
+              <span class="tag learning">Deep Learning</span>
+              <span class="tag learning">LLMs</span>
+              <span class="tag learning">RAG</span>
+              <span class="tag learning">Agents</span>
+              <span class="tag learning">LLMOps</span>
             </div>
-
             <div class="spacer"></div>
-
-            <a
-              class="project-link"
-              href="https://github.com/mg-ishaque"
-              target="_blank"
-              rel="noopener">
+            <a class="project-link" href="https://github.com/mg-ishaque" target="_blank" rel="noopener">
               Follow the work ↗
             </a>
           </article>
-
         </div>
       </div>
     </section>
@@ -1104,33 +1044,33 @@
     <!-- CONTACT -->
     <section id="contact">
       <div class="container">
-
         <div class="contact reveal">
           <h2>Let's build something useful.</h2>
-
           <p>
-            Interested in the work? Explore the code, projects and
-            experiments on GitHub.
+            Explore the code, cloud labs and AI learning journey on GitHub,
+            or connect with me professionally.
           </p>
 
-          <a
-            class="btn primary"
-            href="https://github.com/mg-ishaque"
-            target="_blank"
-            rel="noopener">
-            Visit GitHub ↗
-          </a>
+          <div class="actions" style="justify-content:center">
+            <a class="btn primary" href="mailto:mgib.professional@gmail.com">
+              Email me ↗
+            </a>
+            <a class="btn secondary" href="https://www.linkedin.com/in/mgia" target="_blank" rel="noopener">
+              LinkedIn ↗
+            </a>
+            <a class="btn secondary" href="https://github.com/mg-ishaque" target="_blank" rel="noopener">
+              GitHub ↗
+            </a>
+          </div>
         </div>
-
       </div>
     </section>
-
   </main>
 
   <footer>
     <div class="container footer-inner">
       <span>© 2026 MG Ishaque</span>
-      <span>Cloud • Data • AI</span>
+      <span>Cloud • Data • AI • Building in public</span>
     </div>
   </footer>
 
@@ -1138,13 +1078,8 @@
     function toggleMenu() {
       const nav = document.getElementById("nav");
       const button = document.querySelector(".menu");
-
       nav.classList.toggle("open");
-
-      button.setAttribute(
-        "aria-expanded",
-        nav.classList.contains("open")
-      );
+      button.setAttribute("aria-expanded", nav.classList.contains("open"));
     }
 
     document.querySelectorAll(".nav-links a").forEach(link => {
@@ -1153,26 +1088,17 @@
       });
     });
 
-    /*
-      BIDIRECTIONAL SCROLL REVEAL
-      Elements animate when entering the viewport from either direction,
-      and reset when they leave it, so scrolling DOWN and UP both produce
-      an animation.
-    */
+    // Bidirectional scroll reveal: animations replay when scrolling up or down.
     const revealElements = document.querySelectorAll(".reveal");
 
     revealElements.forEach((element, index) => {
       element.style.setProperty("--reveal-delay", `${(index % 5) * 70}ms`);
     });
 
-    const observer = new IntersectionObserver(
+    const revealObserver = new IntersectionObserver(
       entries => {
         entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("show");
-          } else {
-            entry.target.classList.remove("show");
-          }
+          entry.target.classList.toggle("show", entry.isIntersecting);
         });
       },
       {
@@ -1181,37 +1107,16 @@
       }
     );
 
-    revealElements.forEach(element => observer.observe(element));
+    revealElements.forEach(element => revealObserver.observe(element));
 
-    /*
-      Section transition effect.
-      The active section gets a subtle glow while it is in view.
-    */
+    // Active section highlight.
     const sections = document.querySelectorAll("main section");
-
-    const sectionObserver = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          entry.target.classList.toggle("section-active", entry.isIntersecting);
-        });
-      },
-      {
-        threshold: 0.28
-      }
-    );
-
-    sections.forEach(section => sectionObserver.observe(section));
-
-    /*
-      Nav link highlight follows the section currently visible.
-    */
     const navLinks = document.querySelectorAll(".nav-links a");
 
     const navObserver = new IntersectionObserver(
       entries => {
         entries.forEach(entry => {
-          if (!entry.isIntersecting) return;
-
+          if (!entry.isIntersecting || !entry.target.id) return;
           navLinks.forEach(link => {
             link.classList.toggle(
               "active",
@@ -1220,18 +1125,13 @@
           });
         });
       },
-      {
-        threshold: 0.45
-      }
+      { threshold: 0.45 }
     );
 
-    sections.forEach(section => {
-      if (section.id) navObserver.observe(section);
-    });
+    sections.forEach(section => navObserver.observe(section));
 
-    // Cursor glow
+    // Cursor glow.
     const cursorGlow = document.querySelector(".cursor-glow");
-
     if (cursorGlow && window.matchMedia("(pointer:fine)").matches) {
       window.addEventListener("pointermove", event => {
         cursorGlow.style.left = event.clientX + "px";
@@ -1239,92 +1139,54 @@
       });
     }
 
-    // Reading progress
+    // Reading progress.
     const scrollProgress = document.getElementById("scrollProgress");
-
     window.addEventListener("scroll", () => {
       const max = document.documentElement.scrollHeight - window.innerHeight;
       const progress = max > 0 ? (window.scrollY / max) * 100 : 0;
       scrollProgress.style.width = progress + "%";
     }, { passive: true });
 
-    // Interactive card spotlight + subtle 3D tilt
+    // Card spotlight.
     document.querySelectorAll(".card").forEach(card => {
       card.addEventListener("pointermove", event => {
         if (!window.matchMedia("(pointer:fine)").matches) return;
 
         const rect = card.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
-
-        card.style.setProperty("--spot-x", `${x - 90}px`);
-        card.style.setProperty("--spot-y", `${y - 90}px`);
-
-        const rotateX = ((y / rect.height) - .5) * -4;
-        const rotateY = ((x / rect.width) - .5) * 5;
-
-        card.style.transform =
-          `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`;
-      });
-
-      card.addEventListener("pointerleave", () => {
-        card.style.transform = "";
+        card.style.setProperty("--spot-x", `${event.clientX - rect.left - 90}px`);
+        card.style.setProperty("--spot-y", `${event.clientY - rect.top - 90}px`);
       });
     });
 
-    // Terminal follows pointer slightly
-    const terminal = document.querySelector(".terminal");
-
-    if (terminal && window.matchMedia("(pointer:fine)").matches) {
-      terminal.addEventListener("pointermove", event => {
-        const rect = terminal.getBoundingClientRect();
-        const x = (event.clientX - rect.left) / rect.width - .5;
-        const y = (event.clientY - rect.top) / rect.height - .5;
-
-        terminal.style.transform =
-          `perspective(900px) rotateX(${y * -5}deg) rotateY(${x * 6}deg)`;
-      });
-
-      terminal.addEventListener("pointerleave", () => {
-        terminal.style.transform = "";
-      });
-    }
-
-    // Lightweight animated particle field
+    // Lightweight particle background.
     const canvas = document.getElementById("particles");
     const ctx = canvas.getContext("2d");
     let particles = [];
     let animationFrame;
 
     function resizeCanvas() {
-      const ratio = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = window.innerWidth * ratio;
-      canvas.height = window.innerHeight * ratio;
-      canvas.style.width = window.innerWidth + "px";
-      canvas.style.height = window.innerHeight + "px";
-      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
 
-      const count = Math.min(75, Math.floor(window.innerWidth / 18));
+      const count = Math.min(85, Math.floor((canvas.width * canvas.height) / 16000));
       particles = Array.from({ length: count }, () => ({
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
-        vx: (Math.random() - .5) * .25,
-        vy: (Math.random() - .5) * .25,
-        r: Math.random() * 1.5 + .35
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.6 + .4,
+        dx: (Math.random() - .5) * .18,
+        dy: (Math.random() - .5) * .18
       }));
     }
 
     function drawParticles() {
-      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       particles.forEach((p, i) => {
-        p.x += p.vx;
-        p.y += p.vy;
+        p.x += p.dx;
+        p.y += p.dy;
 
-        if (p.x < -10) p.x = window.innerWidth + 10;
-        if (p.x > window.innerWidth + 10) p.x = -10;
-        if (p.y < -10) p.y = window.innerHeight + 10;
-        if (p.y > window.innerHeight + 10) p.y = -10;
+        if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
@@ -1341,8 +1203,7 @@
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(q.x, q.y);
-            ctx.strokeStyle =
-              `rgba(124,156,255,${(1 - distance / 115) * .055})`;
+            ctx.strokeStyle = `rgba(124,156,255,${(1 - distance / 115) * .055})`;
             ctx.lineWidth = 1;
             ctx.stroke();
           }
@@ -1357,30 +1218,6 @@
       drawParticles();
       window.addEventListener("resize", resizeCanvas);
     }
-
-    /*
-      Subtle scroll parallax:
-      hero content moves at a different rate while scrolling.
-    */
-    const hero = document.querySelector(".hero");
-    const heroGrid = document.querySelector(".hero-grid");
-
-    function updateParallax() {
-      if (!hero || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-      const y = window.scrollY;
-      const heroHeight = hero.offsetHeight;
-
-      if (y <= heroHeight * 1.15) {
-        const amount = Math.min(y, heroHeight) * 0.12;
-        heroGrid.style.transform = `translate3d(0, ${amount}px, 0)`;
-      }
-    }
-
-    window.addEventListener("scroll", updateParallax, { passive: true });
-    updateParallax();
-
   </script>
-
 </body>
 </html>
