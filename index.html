@@ -389,15 +389,62 @@
     /* ANIMATION */
     .reveal {
       opacity: 0;
-      transform: translateY(18px);
+      transform: translateY(55px) scale(.97);
+      filter: blur(5px);
       transition:
-        opacity .7s ease,
-        transform .7s ease;
+        opacity .75s cubic-bezier(.2,.7,.2,1) var(--reveal-delay, 0ms),
+        transform .75s cubic-bezier(.2,.7,.2,1) var(--reveal-delay, 0ms),
+        filter .75s ease var(--reveal-delay, 0ms);
+      will-change: opacity, transform, filter;
     }
 
     .reveal.show {
       opacity: 1;
-      transform: none;
+      transform: translateY(0) scale(1);
+      filter: blur(0);
+    }
+
+    /*
+      Section itself gently brightens while scrolling into view.
+    */
+    main section {
+      position: relative;
+      transition: filter .8s ease, opacity .8s ease;
+    }
+
+    main section:not(.section-active) {
+      filter: saturate(.82);
+    }
+
+    main section.section-active {
+      filter: saturate(1);
+    }
+
+    /*
+      Active navigation item.
+    */
+    .nav-links a {
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 100%;
+      bottom: -8px;
+      height: 2px;
+      border-radius: 99px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transition: right .3s ease;
+    }
+
+    .nav-links a.active {
+      color: var(--text);
+    }
+
+    .nav-links a.active::after {
+      right: 0;
     }
 
     /* RESPONSIVE */
@@ -461,10 +508,287 @@
         margin-top: 12px;
       }
     }
+  
+    /* ===== VISUAL EFFECTS ===== */
+    body { overflow-x: hidden; }
+
+    .noise {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      pointer-events: none;
+      opacity: .035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+    }
+
+    #particles {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .cursor-glow {
+      position: fixed;
+      width: 380px;
+      height: 380px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: -1;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, rgba(124,156,255,.11), rgba(86,224,193,.035) 35%, transparent 70%);
+      filter: blur(8px);
+      transition: left .12s ease-out, top .12s ease-out;
+    }
+
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      width: 0;
+      z-index: 200;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2), #fff);
+      box-shadow: 0 0 14px rgba(124,156,255,.75);
+    }
+
+    .floating-orb {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: -3;
+      filter: blur(55px);
+      opacity: .22;
+      animation: floatOrb 12s ease-in-out infinite alternate;
+    }
+
+    .orb-1 {
+      width: 280px; height: 280px;
+      background: #526cff;
+      top: 18%; left: -100px;
+    }
+
+    .orb-2 {
+      width: 230px; height: 230px;
+      background: #26d9b0;
+      top: 58%; right: -80px;
+      animation-delay: -4s;
+    }
+
+    .orb-3 {
+      width: 190px; height: 190px;
+      background: #9d62ff;
+      bottom: 5%; left: 40%;
+      animation-delay: -8s;
+    }
+
+    @keyframes floatOrb {
+      0% { transform: translate3d(0,0,0) scale(1); }
+      50% { transform: translate3d(40px,-35px,0) scale(1.12); }
+      100% { transform: translate3d(-25px,30px,0) scale(.94); }
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      width: 650px;
+      height: 650px;
+      right: -260px;
+      top: -220px;
+      border-radius: 50%;
+      border: 1px solid rgba(124,156,255,.12);
+      box-shadow:
+        0 0 0 70px rgba(124,156,255,.025),
+        0 0 0 140px rgba(124,156,255,.018);
+      animation: pulseRing 7s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes pulseRing {
+      0%,100% { transform: scale(.94) rotate(0deg); opacity: .55; }
+      50% { transform: scale(1.04) rotate(8deg); opacity: 1; }
+    }
+
+    .eyebrow {
+      box-shadow: 0 0 35px rgba(124,156,255,.08);
+      animation: badgePulse 3s ease-in-out infinite;
+    }
+
+    @keyframes badgePulse {
+      0%,100% { box-shadow: 0 0 25px rgba(124,156,255,.06); }
+      50% { box-shadow: 0 0 35px rgba(86,224,193,.13); }
+    }
+
+    h1 {
+      text-shadow: 0 0 70px rgba(124,156,255,.08);
+    }
+
+    .gradient {
+      background-size: 200% 200%;
+      animation: gradientMove 5s ease infinite;
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .terminal {
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform .15s ease-out, box-shadow .3s ease;
+    }
+
+    .terminal::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(120deg, transparent 20%, rgba(124,156,255,.55), rgba(86,224,193,.45), transparent 80%);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: .45;
+      animation: borderFlow 5s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes borderFlow {
+      0% { filter: hue-rotate(0deg); }
+      100% { filter: hue-rotate(360deg); }
+    }
+
+    .card {
+      position: relative;
+      overflow: hidden;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      top: var(--spot-y, -100px);
+      left: var(--spot-x, -100px);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(124,156,255,.16), transparent 68%);
+      pointer-events: none;
+      transition: opacity .2s;
+      opacity: 0;
+    }
+
+    .card:hover::before { opacity: 1; }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      left: -120%;
+      top: 0;
+      width: 70%;
+      height: 100%;
+      transform: skewX(-20deg);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.055), transparent);
+      transition: left .65s ease;
+      pointer-events: none;
+    }
+
+    .card:hover::after { left: 150%; }
+
+    .icon {
+      transition: transform .3s ease, filter .3s ease;
+    }
+
+    .card:hover .icon {
+      transform: translateZ(20px) scale(1.12) rotate(-4deg);
+      filter: drop-shadow(0 0 12px rgba(124,156,255,.35));
+    }
+
+    .tag {
+      transition: .2s ease;
+    }
+
+    .tag:hover {
+      border-color: rgba(124,156,255,.5);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .btn.primary {
+      box-shadow: 0 12px 35px rgba(124,156,255,.12);
+    }
+
+    .btn.primary:hover {
+      box-shadow: 0 16px 45px rgba(124,156,255,.22);
+    }
+
+    .stat {
+      transition: transform .25s ease, border-color .25s ease, background .25s ease;
+    }
+
+    .stat:hover {
+      transform: translateY(-4px);
+      border-color: rgba(124,156,255,.25);
+      background: rgba(124,156,255,.045);
+    }
+
+    .contact {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contact::before,
+    .contact::after {
+      content: "";
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      border: 1px solid rgba(124,156,255,.15);
+      animation: contactRing 8s linear infinite;
+    }
+
+    .contact::before { left: -130px; top: -150px; }
+    .contact::after { right: -130px; bottom: -150px; animation-direction: reverse; }
+
+    @keyframes contactRing {
+      to { transform: rotate(360deg) scale(1.15); }
+    }
+
+    .contact > * { position: relative; z-index: 1; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+      }
+    }
+
   </style>
 </head>
 
 <body>
+
+  <div class="cursor-glow" aria-hidden="true"></div>
+  <div class="noise" aria-hidden="true"></div>
+  <canvas id="particles" aria-hidden="true"></canvas>
+  <div class="scroll-progress" id="scrollProgress"></div>
+  <div class="floating-orb orb-1" aria-hidden="true"></div>
+  <div class="floating-orb orb-2" aria-hidden="true"></div>
+  <div class="floating-orb orb-3" aria-hidden="true"></div>
+
 
   <nav class="nav" id="nav">
     <div class="container nav-inner">
@@ -505,7 +829,7 @@
 
           <p>
             I build practical cloud infrastructure, data workflows and
-            AI/ML projects — with a focus on learning by building.
+            machine-learning projects — with a focus on learning by building.
           </p>
 
           <div class="actions">
@@ -829,20 +1153,233 @@
       });
     });
 
+    /*
+      BIDIRECTIONAL SCROLL REVEAL
+      Elements animate when entering the viewport from either direction,
+      and reset when they leave it, so scrolling DOWN and UP both produce
+      an animation.
+    */
+    const revealElements = document.querySelectorAll(".reveal");
+
+    revealElements.forEach((element, index) => {
+      element.style.setProperty("--reveal-delay", `${(index % 5) * 70}ms`);
+    });
+
     const observer = new IntersectionObserver(
       entries => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.add("show");
+          } else {
+            entry.target.classList.remove("show");
           }
         });
       },
-      { threshold: 0.12 }
+      {
+        threshold: 0.16,
+        rootMargin: "0px 0px -8% 0px"
+      }
     );
 
-    document.querySelectorAll(".reveal").forEach(element => {
-      observer.observe(element);
+    revealElements.forEach(element => observer.observe(element));
+
+    /*
+      Section transition effect.
+      The active section gets a subtle glow while it is in view.
+    */
+    const sections = document.querySelectorAll("main section");
+
+    const sectionObserver = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          entry.target.classList.toggle("section-active", entry.isIntersecting);
+        });
+      },
+      {
+        threshold: 0.28
+      }
+    );
+
+    sections.forEach(section => sectionObserver.observe(section));
+
+    /*
+      Nav link highlight follows the section currently visible.
+    */
+    const navLinks = document.querySelectorAll(".nav-links a");
+
+    const navObserver = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+
+          navLinks.forEach(link => {
+            link.classList.toggle(
+              "active",
+              link.getAttribute("href") === "#" + entry.target.id
+            );
+          });
+        });
+      },
+      {
+        threshold: 0.45
+      }
+    );
+
+    sections.forEach(section => {
+      if (section.id) navObserver.observe(section);
     });
+
+    // Cursor glow
+    const cursorGlow = document.querySelector(".cursor-glow");
+
+    if (cursorGlow && window.matchMedia("(pointer:fine)").matches) {
+      window.addEventListener("pointermove", event => {
+        cursorGlow.style.left = event.clientX + "px";
+        cursorGlow.style.top = event.clientY + "px";
+      });
+    }
+
+    // Reading progress
+    const scrollProgress = document.getElementById("scrollProgress");
+
+    window.addEventListener("scroll", () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = max > 0 ? (window.scrollY / max) * 100 : 0;
+      scrollProgress.style.width = progress + "%";
+    }, { passive: true });
+
+    // Interactive card spotlight + subtle 3D tilt
+    document.querySelectorAll(".card").forEach(card => {
+      card.addEventListener("pointermove", event => {
+        if (!window.matchMedia("(pointer:fine)").matches) return;
+
+        const rect = card.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+
+        card.style.setProperty("--spot-x", `${x - 90}px`);
+        card.style.setProperty("--spot-y", `${y - 90}px`);
+
+        const rotateX = ((y / rect.height) - .5) * -4;
+        const rotateY = ((x / rect.width) - .5) * 5;
+
+        card.style.transform =
+          `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`;
+      });
+
+      card.addEventListener("pointerleave", () => {
+        card.style.transform = "";
+      });
+    });
+
+    // Terminal follows pointer slightly
+    const terminal = document.querySelector(".terminal");
+
+    if (terminal && window.matchMedia("(pointer:fine)").matches) {
+      terminal.addEventListener("pointermove", event => {
+        const rect = terminal.getBoundingClientRect();
+        const x = (event.clientX - rect.left) / rect.width - .5;
+        const y = (event.clientY - rect.top) / rect.height - .5;
+
+        terminal.style.transform =
+          `perspective(900px) rotateX(${y * -5}deg) rotateY(${x * 6}deg)`;
+      });
+
+      terminal.addEventListener("pointerleave", () => {
+        terminal.style.transform = "";
+      });
+    }
+
+    // Lightweight animated particle field
+    const canvas = document.getElementById("particles");
+    const ctx = canvas.getContext("2d");
+    let particles = [];
+    let animationFrame;
+
+    function resizeCanvas() {
+      const ratio = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = window.innerWidth * ratio;
+      canvas.height = window.innerHeight * ratio;
+      canvas.style.width = window.innerWidth + "px";
+      canvas.style.height = window.innerHeight + "px";
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+
+      const count = Math.min(75, Math.floor(window.innerWidth / 18));
+      particles = Array.from({ length: count }, () => ({
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        vx: (Math.random() - .5) * .25,
+        vy: (Math.random() - .5) * .25,
+        r: Math.random() * 1.5 + .35
+      }));
+    }
+
+    function drawParticles() {
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+      particles.forEach((p, i) => {
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < -10) p.x = window.innerWidth + 10;
+        if (p.x > window.innerWidth + 10) p.x = -10;
+        if (p.y < -10) p.y = window.innerHeight + 10;
+        if (p.y > window.innerHeight + 10) p.y = -10;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(155,177,255,.35)";
+        ctx.fill();
+
+        for (let j = i + 1; j < particles.length; j++) {
+          const q = particles[j];
+          const dx = p.x - q.x;
+          const dy = p.y - q.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < 115) {
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(q.x, q.y);
+            ctx.strokeStyle =
+              `rgba(124,156,255,${(1 - distance / 115) * .055})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+        }
+      });
+
+      animationFrame = requestAnimationFrame(drawParticles);
+    }
+
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      resizeCanvas();
+      drawParticles();
+      window.addEventListener("resize", resizeCanvas);
+    }
+
+    /*
+      Subtle scroll parallax:
+      hero content moves at a different rate while scrolling.
+    */
+    const hero = document.querySelector(".hero");
+    const heroGrid = document.querySelector(".hero-grid");
+
+    function updateParallax() {
+      if (!hero || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+      const y = window.scrollY;
+      const heroHeight = hero.offsetHeight;
+
+      if (y <= heroHeight * 1.15) {
+        const amount = Math.min(y, heroHeight) * 0.12;
+        heroGrid.style.transform = `translate3d(0, ${amount}px, 0)`;
+      }
+    }
+
+    window.addEventListener("scroll", updateParallax, { passive: true });
+    updateParallax();
+
   </script>
 
 </body>
