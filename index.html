@@ -1,13 +1,856 @@
-<!DOCTYPE html>
+from pathlib import Path
+
+html = r'''<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MG Ishaque | Portfolio</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MG Ishaque — Cloud, Data and AI portfolio.">
+  <meta name="theme-color" content="#070b16">
+  <title>MG Ishaque | Cloud • Data • AI</title>
+
+  <style>
+    :root {
+      --bg: #070b16;
+      --surface: #0d1426;
+      --surface-2: #111a30;
+      --text: #eef3ff;
+      --muted: #9ba8c4;
+      --line: rgba(255,255,255,.09);
+      --accent: #7c9cff;
+      --accent-2: #56e0c1;
+      --max: 1120px;
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system,
+        BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 80% 0%, rgba(124,156,255,.16), transparent 28rem),
+        radial-gradient(circle at 10% 20%, rgba(86,224,193,.08), transparent 24rem),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      width: min(var(--max), 92%);
+      margin: auto;
+    }
+
+    /* NAVIGATION */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(7,11,22,.72);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav-inner {
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-weight: 800;
+      letter-spacing: -.04em;
+      font-size: 1.1rem;
+    }
+
+    .logo span { color: var(--accent); }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      font-size: .92rem;
+      color: var(--muted);
+      transition: .2s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    .menu {
+      display: none;
+      background: none;
+      border: 0;
+      color: var(--text);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* HERO */
+    .hero {
+      min-height: calc(100vh - 72px);
+      display: grid;
+      place-items: center;
+      padding: 90px 0;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.35fr .65fr;
+      gap: 70px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      border: 1px solid var(--line);
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.035);
+      color: var(--muted);
+      font-size: .82rem;
+      margin-bottom: 24px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-2);
+      box-shadow: 0 0 16px var(--accent-2);
+    }
+
+    h1 {
+      font-size: clamp(3rem, 8vw, 6.5rem);
+      line-height: .94;
+      letter-spacing: -.075em;
+      max-width: 850px;
+    }
+
+    .gradient {
+      background: linear-gradient(
+        100deg,
+        #fff 10%,
+        #9bb1ff 48%,
+        #69e4c6 90%
+      );
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 650px;
+      margin: 28px 0 34px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-weight: 700;
+      border: 1px solid var(--line);
+      transition: .2s;
+    }
+
+    .btn.primary {
+      background: var(--text);
+      color: #0a0e19;
+    }
+
+    .btn.secondary {
+      background: rgba(255,255,255,.04);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,.2);
+    }
+
+    /* TERMINAL */
+    .terminal {
+      background: linear-gradient(
+        145deg,
+        rgba(17,26,48,.95),
+        rgba(8,13,27,.95)
+      );
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 30px 90px rgba(0,0,0,.35);
+      overflow: hidden;
+    }
+
+    .terminal-bar {
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      gap: 7px;
+    }
+
+    .terminal-bar i {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #52607a;
+    }
+
+    .terminal-body {
+      padding: 24px;
+      font: 14px/1.9 ui-monospace, SFMono-Regular, Menlo, monospace;
+      color: #b8c5df;
+    }
+
+    .key { color: #7c9cff; }
+    .str { color: #69e4c6; }
+    .muted { color: #66748f; }
+
+    /* SECTIONS */
+    section { padding: 100px 0; }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 30px;
+      align-items: end;
+      margin-bottom: 34px;
+    }
+
+    .section-head h2 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      letter-spacing: -.05em;
+    }
+
+    .section-head p {
+      max-width: 520px;
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .card {
+      background: linear-gradient(
+        145deg,
+        rgba(17,26,48,.8),
+        rgba(10,15,29,.8)
+      );
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 26px;
+      transition: .25s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(124,156,255,.35);
+    }
+
+    .card .icon {
+      font-size: 1.5rem;
+      margin-bottom: 18px;
+    }
+
+    .card h3 {
+      font-size: 1.15rem;
+      margin-bottom: 9px;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: .94rem;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .tag {
+      font-size: .76rem;
+      padding: 5px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: #b9c4da;
+    }
+
+    /* PROJECTS */
+    .project {
+      display: flex;
+      flex-direction: column;
+      min-height: 250px;
+    }
+
+    .project .spacer { flex: 1; }
+
+    .project-link {
+      margin-top: 20px;
+      color: #aebeff;
+      font-weight: 700;
+      font-size: .9rem;
+    }
+
+    /* ABOUT */
+    .about {
+      display: grid;
+      grid-template-columns: .8fr 1.2fr;
+      gap: 55px;
+    }
+
+    .about-copy p {
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+      gap: 14px;
+    }
+
+    .stat {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255,255,255,.025);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.6rem;
+      letter-spacing: -.04em;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: .82rem;
+    }
+
+    /* CONTACT */
+    .contact {
+      text-align: center;
+      padding: 70px 30px;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      background: linear-gradient(
+        145deg,
+        rgba(124,156,255,.1),
+        rgba(86,224,193,.05)
+      );
+    }
+
+    .contact h2 {
+      font-size: clamp(2.2rem,5vw,4rem);
+      letter-spacing: -.06em;
+      margin-bottom: 14px;
+    }
+
+    .contact p {
+      color: var(--muted);
+      margin-bottom: 25px;
+    }
+
+    /* FOOTER */
+    footer {
+      padding: 35px 0;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: .85rem;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    /* ANIMATION */
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition:
+        opacity .7s ease,
+        transform .7s ease;
+    }
+
+    .reveal.show {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 850px) {
+      .hero-grid,
+      .about {
+        grid-template-columns: 1fr;
+      }
+
+      .terminal { display: none; }
+
+      .grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .nav-links { display: none; }
+
+      .menu {
+        display: block;
+      }
+
+      .nav.open .nav-links {
+        display: flex;
+        position: absolute;
+        top: 72px;
+        left: 0;
+        right: 0;
+        background: rgba(7,11,22,.97);
+        padding: 20px 4%;
+        flex-direction: column;
+        align-items: flex-start;
+        border-bottom: 1px solid var(--line);
+      }
+    }
+
+    @media (max-width: 600px) {
+      section { padding: 72px 0; }
+
+      .grid,
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 70px 0;
+      }
+
+      .hero p {
+        font-size: 1rem;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+      }
+
+      .section-head {
+        display: block;
+      }
+
+      .section-head p {
+        margin-top: 12px;
+      }
+    }
+  </style>
 </head>
+
 <body>
-    <h1>MG Ishaque</h1>
-    <h2>Cloud • Data • AI</h2>
-    <p>Welcome to my portfolio.</p>
+
+  <nav class="nav" id="nav">
+    <div class="container nav-inner">
+      <a class="logo" href="#top">MG<span>.</span></a>
+
+      <button
+        class="menu"
+        aria-label="Open menu"
+        aria-expanded="false"
+        onclick="toggleMenu()">
+        ☰
+      </button>
+
+      <div class="nav-links">
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <main id="top">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container hero-grid">
+
+        <div class="reveal">
+          <div class="eyebrow">
+            <span class="dot"></span>
+            Building in Cloud, Data & AI
+          </div>
+
+          <h1>
+            MG <span class="gradient">Ishaque.</span>
+          </h1>
+
+          <p>
+            I build practical cloud infrastructure, data workflows and
+            generative AI projects — with a focus on learning by building.
+          </p>
+
+          <div class="actions">
+            <a class="btn primary" href="#projects">
+              View projects ↓
+            </a>
+
+            <a
+              class="btn secondary"
+              href="https://github.com/mg-ishaque"
+              target="_blank"
+              rel="noopener">
+              GitHub ↗
+            </a>
+          </div>
+        </div>
+
+        <div class="terminal reveal">
+          <div class="terminal-bar">
+            <i></i><i></i><i></i>
+          </div>
+
+          <div class="terminal-body">
+            <span class="muted">$</span> whoami<br>
+            <span class="key">name</span>:
+            <span class="str">"MG Ishaque"</span><br>
+
+            <span class="key">focus</span>:
+            [<span class="str">"Cloud"</span>,
+            <span class="str">"Data"</span>,
+            <span class="str">"AI"</span>]<br>
+
+            <span class="key">stack</span>:
+            [<span class="str">"AWS"</span>,
+            <span class="str">"Python"</span>,
+            <span class="str">"SQL"</span>]<br>
+
+            <span class="key">status</span>:
+            <span class="str">"building"</span><br><br>
+
+            <span class="muted">
+              # always learning, always shipping
+            </span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about">
+      <div class="container about">
+
+        <div class="section-head reveal">
+          <h2>About</h2>
+        </div>
+
+        <div class="about-copy reveal">
+          <p>
+            I'm developing across cloud engineering, data engineering and AI.
+            My current work includes AWS hands-on labs, Linux/Git workflows,
+            Python data science and machine-learning projects.
+          </p>
+
+          <p>
+            This portfolio is a living record of what I build, learn and
+            document — not just a list of technologies.
+          </p>
+
+          <div class="stats">
+
+            <div class="stat">
+              <strong>Cloud</strong>
+              <span>AWS • EC2 • EBS • ELB • IAM • CloudWatch</span>
+            </div>
+
+            <div class="stat">
+              <strong>Data</strong>
+              <span>Python • SQL • Pandas • NumPy</span>
+            </div>
+
+            <div class="stat">
+              <strong>AI/ML</strong>
+              <span>Scikit-learn • Deep Learning • LLMs</span>
+            </div>
+
+            <div class="stat">
+              <strong>Workflow</strong>
+              <span>Linux • Git • GitHub • Automation</span>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills">
+      <div class="container">
+
+        <div class="section-head reveal">
+          <h2>Skills</h2>
+
+          <p>
+            A growing technical stack focused on building deployable,
+            measurable projects.
+          </p>
+        </div>
+
+        <div class="grid">
+
+          <article class="card reveal">
+            <div class="icon">☁️</div>
+            <h3>Cloud & Infrastructure</h3>
+
+            <p>
+              Hands-on AWS practice with compute, storage, networking,
+              IAM, monitoring and load balancing.
+            </p>
+
+            <div class="tags">
+              <span class="tag">AWS</span>
+              <span class="tag">EC2</span>
+              <span class="tag">EBS</span>
+              <span class="tag">ELB</span>
+              <span class="tag">IAM</span>
+              <span class="tag">CloudWatch</span>
+            </div>
+          </article>
+
+          <article class="card reveal">
+            <div class="icon">⌘</div>
+            <h3>Data & Python</h3>
+
+            <p>
+              Data analysis, preprocessing, SQL and reproducible Python
+              workflows for analytics and ML.
+            </p>
+
+            <div class="tags">
+              <span class="tag">Python</span>
+              <span class="tag">SQL</span>
+              <span class="tag">Pandas</span>
+              <span class="tag">NumPy</span>
+              <span class="tag">Git</span>
+            </div>
+          </article>
+
+          <article class="card reveal">
+            <div class="icon">✦</div>
+            <h3>AI & Machine Learning</h3>
+
+            <p>
+              Classical ML and a growing focus on deep learning, LLMs,
+              RAG and MLOps.
+            </p>
+
+            <div class="tags">
+              <span class="tag">Scikit-learn</span>
+              <span class="tag">TensorFlow</span>
+              <span class="tag">PyTorch</span>
+              <span class="tag">LLM</span>
+              <span class="tag">RAG</span>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects">
+      <div class="container">
+
+        <div class="section-head reveal">
+          <h2>Projects</h2>
+
+          <p>
+            Selected work and hands-on labs. More projects will be added
+            as they are completed.
+          </p>
+        </div>
+
+        <div class="grid">
+
+          <article class="card project reveal">
+            <div class="icon">⚙️</div>
+
+            <h3>AWS Cloud Labs</h3>
+
+            <p>
+              Documented AWS assignments covering IAM, CloudWatch, EBS,
+              FSx and Elastic Load Balancing.
+            </p>
+
+            <div class="tags">
+              <span class="tag">AWS</span>
+              <span class="tag">Cloud</span>
+              <span class="tag">DevOps</span>
+            </div>
+
+            <div class="spacer"></div>
+
+            <a
+              class="project-link"
+              href="https://github.com/mg-ishaque"
+              target="_blank"
+              rel="noopener">
+              View on GitHub ↗
+            </a>
+          </article>
+
+          <article class="card project reveal">
+            <div class="icon">🚀</div>
+
+            <h3>ML Projects</h3>
+
+            <p>
+              Machine-learning projects exploring prediction, evaluation
+              and practical model-building workflows.
+            </p>
+
+            <div class="tags">
+              <span class="tag">Python</span>
+              <span class="tag">Scikit-learn</span>
+              <span class="tag">ML</span>
+            </div>
+
+            <div class="spacer"></div>
+
+            <a
+              class="project-link"
+              href="https://github.com/mg-ishaque"
+              target="_blank"
+              rel="noopener">
+              Explore repositories ↗
+            </a>
+          </article>
+
+          <article class="card project reveal">
+            <div class="icon">🧠</div>
+
+            <h3>AI Engineering</h3>
+
+            <p>
+              Learning and experimentation around LLM applications,
+              RAG, MLOps and agentic workflows.
+            </p>
+
+            <div class="tags">
+              <span class="tag">LLMs</span>
+              <span class="tag">RAG</span>
+              <span class="tag">MLOps</span>
+            </div>
+
+            <div class="spacer"></div>
+
+            <a
+              class="project-link"
+              href="https://github.com/mg-ishaque"
+              target="_blank"
+              rel="noopener">
+              Follow the work ↗
+            </a>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+      <div class="container">
+
+        <div class="contact reveal">
+          <h2>Let's build something useful.</h2>
+
+          <p>
+            Interested in the work? Explore the code, projects and
+            experiments on GitHub.
+          </p>
+
+          <a
+            class="btn primary"
+            href="https://github.com/mg-ishaque"
+            target="_blank"
+            rel="noopener">
+            Visit GitHub ↗
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <span>© 2026 MG Ishaque</span>
+      <span>Cloud • Data • AI</span>
+    </div>
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      const nav = document.getElementById("nav");
+      const button = document.querySelector(".menu");
+
+      nav.classList.toggle("open");
+
+      button.setAttribute(
+        "aria-expanded",
+        nav.classList.contains("open")
+      );
+    }
+
+    document.querySelectorAll(".nav-links a").forEach(link => {
+      link.addEventListener("click", () => {
+        document.getElementById("nav").classList.remove("open");
+      });
+    });
+
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("show");
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+
+    document.querySelectorAll(".reveal").forEach(element => {
+      observer.observe(element);
+    });
+  </script>
+
 </body>
 </html>
+'''
+
+path = Path("/mnt/data/index.html")
+path.write_text(html, encoding="utf-8")
+print(f"Created: {path}")
